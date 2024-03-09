@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Check branch name') {
             steps {
-                    echo $base
+                    echo env.base
                 }
             }
         }
