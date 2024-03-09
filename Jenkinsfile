@@ -17,12 +17,4 @@ pipeline {
                 }
             }
         }
-        stage('Merge to main') {
-            steps {
-                script {
-                        git branch: 'dev', url: 'https://github.com/DavoA/TaskJenkins.git'
-                    }
-                }
-            }
-        }
-    }
+}
