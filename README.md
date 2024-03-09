@@ -1,6 +1,4 @@
 # lessons-23-241
 asd
-SAFSDFADSGDF
-ghjg
-sdfasd
+SAFSDFADS
 zgddsfs
