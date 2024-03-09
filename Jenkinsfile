@@ -24,10 +24,7 @@ pipeline {
         stage('Merge to main') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'davoa-pat', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
                         git branch: 'dev', url: 'https://github.com/DavoA/TaskJenkins.git'
-                        git commit: 'Merging dev into main', url: 'https://github.com/DavoA/TaskJenkins.git'
-                        git mergeRemote: 'origin', remote: env.sourseBranchName
                     }
                 }
             }
