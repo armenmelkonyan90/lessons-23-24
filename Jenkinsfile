@@ -6,7 +6,7 @@ pipeline {
             [defaultValue: '', key: 'base', regexpFilter: '', value: '$.ref'],
             ],
      causeString: 'Triggered on $ref',
-     token: 'rare',
+     token: 'test',
      tokenCredentialId: '' )
   }
 
