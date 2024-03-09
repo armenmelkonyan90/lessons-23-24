@@ -1,20 +1,35 @@
 pipeline {
     agent any
-
+    triggers {
+        GenericTrigger(
+            genericVariables: [
+                [key: 'targetBranchName', value: '$.body.pull_request.base.ref'],
+                [key: 'sourseBranchName', value: '$.body.pull_request.head.ref'],
+            ],
+            token: 'my-webhook-token'
+        )
+    }
     stages {
-        stage('Build') {
+        stage('Check branch name') {
             steps {
-                echo 'Building..'
+                script {
+                    if (env.tagetBranchName != 'dev') {
+                        echo "Branch name is not 'dev', proceeding with the merge"
+                    } else {
+                        error "Merge rejected! Branch name 'dev' is not allowed."
+                    }
+                }
             }
         }
-        stage('Test') {
+        stage('Merge to main') {
             steps {
-                echo 'Testing..'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'davoa-pat', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                        git branch: 'dev', url: 'https://github.com/DavoA/TaskJenkins.git'
+                        git commit: 'Merging dev into main', url: 'https://github.com/DavoA/TaskJenkins.git'
+                        git mergeRemote: 'origin', remote: env.sourseBranchName
+                    }
+                }
             }
         }
     }
