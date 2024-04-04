@@ -27,3 +27,13 @@ jobs:
           for file in ${{ steps.changed-files-build-specific.outputs.all_changed_files }}; do
             echo "$file was changed"
           done
+
+      - uses: Stockopedia/action-get-changed-files@v1
+        id: get_changed
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          ignore: "**/+(.github)"
+          foldersOnly: false 
+          format: csv
+      - name: Echo changed files
+        run: echo ${{ steps.get_changed.outputs.changed }}
