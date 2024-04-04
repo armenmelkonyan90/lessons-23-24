@@ -1,3 +1,31 @@
+# name: ci_dev
+
+# on:
+#   push:
+#     branches:
+#       - 'dev'
+
+# jobs:
+#   build_backend:
+#     runs-on: ubuntu-20.04
+
+#     steps:
+#       - uses: actions/checkout@v3
+#         with:
+#           fetch-depth: 0
+
+#       - name: Get changed files in the build folder
+#         id: changed-files-build-specific
+#         uses: tj-actions/changed-files@v35
+#         with:
+#           files: |
+#             folder1
+#             folder2
+
+#       - name: List all changed files
+#         run: |
+#             echo "${{ steps.changed-files-build-specific.outputs.all_changed_files }}"
+
 name: ci_dev
 
 on:
@@ -22,7 +50,24 @@ jobs:
             folder1
             folder2
 
+      - name: Extract folder names
+        id: extract-folder-names
+        run: |
+          changed_files="${{ steps.changed-files-build-specific.outputs.all_changed_files }}"
+          folder_names=()
+          IFS=$'\n'
+          for file in $changed_files; do
+            folder=$(dirname "$file")
+            if [[ ! " ${folder_names[@]} " =~ " ${folder} " ]]; then
+              folder_names+=("$folder")
+            fi
+          done
+          echo "::set-output name=folder_names::${folder_names[*]}"
+
       - name: List all changed files
         run: |
-            echo "${{ steps.changed-files-build-specific.outputs.all_changed_files }}"
+          echo "All changed files: ${{ steps.changed-files-build-specific.outputs.all_changed_files }}"
 
+      - name: List changed folders
+        run: |
+          echo "Changed folders: ${{ steps.extract-folder-names.outputs.folder_names }}"
