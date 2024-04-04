@@ -1,28 +1,51 @@
-name: ci_dev
+# name: ci_dev
+
+# on:
+#   push:
+#     branches:
+#       - 'dev'
+
+# jobs:
+#   build_backend:
+#     runs-on: ubuntu-20.04
+
+#     steps:
+#       - uses: actions/checkout@v3
+#         with:
+#           fetch-depth: 0
+
+#       - name: Get changed files in the build folder
+#         id: changed-files-build-specific
+#         uses: tj-actions/changed-files@v35
+#         with:
+#           files: |
+#             folder1
+#             folder2
+
+#       - name: List all changed files
+#         run: |
+#             echo "${{ steps.changed-files-build-specific.outputs.all_changed_files }}"
+            
+name: Get Changed Folders
 
 on:
   push:
     branches:
-      - 'dev'
+      - dev
 
 jobs:
-  build_backend:
-    runs-on: ubuntu-20.04
+  check_changes:
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-      - name: Get changed files in the build folder
-        id: changed-files-build-specific
-        uses: tj-actions/changed-files@v35
-        with:
-          files: |
-            folder1
-            folder2
-
-      - name: List all changed files
+      - name: Get Changed Folders
+        id: get_changed_folders
         run: |
-            echo "${{ steps.changed-files-build-specific.outputs.all_changed_files }}"
-            
+          changed_folders=$(git diff --name-only HEAD^ HEAD | grep -E '.*\/' | cut -d/ -f1 | uniq)
+          echo "::set-output name=changed_folders::$changed_folders"
+
+      - name: Print Changed Folders
+        run: echo "Changed folders are ${{ steps.get_changed_folders.outputs.changed_folders }}"
