@@ -24,5 +24,5 @@ jobs:
 
       - name: List all changed files
         run: |
-            echo ${{ steps.changed-files-build-specific.outputs.all_changed_files }}; do
+            echo ${{ steps.changed-files-build-specific.outputs.all_changed_files }}
             
