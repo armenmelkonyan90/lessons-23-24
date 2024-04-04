@@ -25,13 +25,13 @@
 #       - name: List all changed files
 #         run: |
 #             echo "${{ steps.changed-files-build-specific.outputs.all_changed_files }}"
-            
+
 name: Get Changed Folders
 
 on:
   push:
     branches:
-      - dev
+      - main
 
 jobs:
   check_changes:
@@ -41,11 +41,23 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Get Changed Folders
-        id: get_changed_folders
-        run: |
-          changed_folders=$(git diff --name-only HEAD^ HEAD | grep -E '.*\/' | cut -d/ -f1 | uniq)
-          echo "::set-output name=changed_folders::$changed_folders"
+      - name: Get Changed Files
+        id: get_changed_files
+        uses: tj-actions/changed-files@v35
 
+      - name: Extract Changed Folders
+        id: extract_changed_folders
+        run: |
+          changed_files="${{ steps.get_changed_files.outputs.all }}"
+          changed_folders=()
+          IFS=$'\n'
+          for file in $changed_files; do
+            folder=$(dirname "$file")
+            if [[ ! " ${changed_folders[@]} " =~ " ${folder} " ]]; then
+              changed_folders+=("$folder")
+            fi
+          done
+          echo "::set-output name=changed_folders::${changed_folders[*]}"
+      
       - name: Print Changed Folders
-        run: echo "Changed folders are ${{ steps.get_changed_folders.outputs.changed_folders }}"
+        run: echo "Changed folders are ${{ steps.extract_changed_folders.outputs.changed_folders }}"
