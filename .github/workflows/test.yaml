@@ -54,15 +54,8 @@ jobs:
         id: extract-folder-names
         run: |
           changed_files="${{ steps.changed-files-build-specific.outputs.all_changed_files }}"
-          folder_names=()
-          IFS=$'\n'
-          for file in $changed_files; do
-            folder=$(dirname "$file")
-            if [[ ! " ${folder_names[@]} " =~ " ${folder} " ]]; then
-              folder_names+=("$folder")
-            fi
-          done
-          echo "::set-output name=folder_names::${folder_names[*]}"
+          folder_names=$(echo "$changed_files" | xargs -n1 dirname | sort -u)
+          echo "::set-output name=folder_names::${folder_names}"
 
       - name: List all changed files
         run: |
@@ -72,4 +65,4 @@ jobs:
         run: |
           echo "Changed folders: ${{ steps.extract-folder-names.outputs.folder_names }}"
 
-          
+
