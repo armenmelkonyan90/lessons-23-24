@@ -1,6 +1,8 @@
 name: run on prerelease
 
-on: [release]
+on: 
+  release:
+    types: [prereleased]
 
 permissions:
   id-token: write # This is required for requesting the AWS JWT
