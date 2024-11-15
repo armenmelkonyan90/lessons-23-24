@@ -11,7 +11,6 @@ permissions:
 
 jobs:
   prerelease:
-    if: github.event.release.target_commitish == 'staging'
     runs-on: ubuntu-20.04
     env:
       TF_VERSION: "1.2.8"
@@ -20,7 +19,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - run: echo "started  prerelease"
+      - run: echo "started by PUSH"
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
