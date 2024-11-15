@@ -19,5 +19,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: echo "started from release"
-      - name: print payload
-        run: echo ${{github.release}}
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
