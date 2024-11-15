@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   plan_prod:
+    if: github.event.release.target_commitish == 'main'
     runs-on: ubuntu-20.04
     env:
       TF_VERSION: "1.2.8"
