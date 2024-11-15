@@ -1,0 +1,28 @@
+name: run on prerelease
+
+on: 
+  push:
+    branches:
+      - 'stage'
+
+permissions:
+  id-token: write # This is required for requesting the AWS JWT
+  contents: read  # This is required for actions/checkout
+
+jobs:
+  prerelease:
+    if: github.event.release.target_commitish == 'staging'
+    runs-on: ubuntu-20.04
+    env:
+      TF_VERSION: "1.2.8"
+      TF_AGENT_POOL_ID: "apool-3BXHFcvMX5e3gvMT"
+      NODE_VERSION: 20.12.x
+
+    steps:
+      - uses: actions/checkout@v3
+      - run: echo "started  prerelease"
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
