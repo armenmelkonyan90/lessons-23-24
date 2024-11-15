@@ -20,4 +20,4 @@ jobs:
       - uses: actions/checkout@v3
       - run: echo "started from prerelease"
       - name: print payload
-        run: echo ${{github.release}}
+        run: echo ${{github}}
