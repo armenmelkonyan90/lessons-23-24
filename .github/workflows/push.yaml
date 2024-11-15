@@ -3,7 +3,7 @@ name: run on prerelease
 on: 
   push:
     branches:
-      - 'stage'
+      - 'staging'
 
 permissions:
   id-token: write # This is required for requesting the AWS JWT
