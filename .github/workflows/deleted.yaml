@@ -1,4 +1,4 @@
-name: run on prerelease
+name: run on delete
 
 on: 
   release:
